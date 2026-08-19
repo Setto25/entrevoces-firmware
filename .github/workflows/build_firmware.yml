@@ -34,7 +34,7 @@ jobs:
           MODULE_PATH="$(pwd)/custom_code/dispositivo/firmware_personalizado/modulo_pdm/micropython.cmake"
           cd micropython/ports/esp32
           make submodules
-          make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH"
+          make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH" CFLAGS_EXTRA="-DCFG_TUD_CDC_EP_BUFSIZE=512"
 
       - name: Upload Firmware Artifact
         uses: actions/upload-artifact@v4
