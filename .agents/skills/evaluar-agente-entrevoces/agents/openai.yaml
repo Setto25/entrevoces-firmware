@@ -1,0 +1,4 @@
+interface:
+  display_name: "Evaluar agente EntreVoces"
+  short_description: "Comprueba intenciones, herramientas y seguridad"
+  default_prompt: "Usa $evaluar-agente-entrevoces para evaluar el agente con casos seguros y adversariales."

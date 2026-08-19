@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cerrar módulo EntreVoces"
+  short_description: "Verifica cambios y actualiza la memoria técnica"
+  default_prompt: "Usa $cerrar-modulo-entrevoces para verificar y documentar el módulo terminado."

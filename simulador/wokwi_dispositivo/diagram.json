@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "author": "EntreVoces",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-xiao-esp32-s3",
+      "id": "xiao",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "boton_voz",
+      "top": 180,
+      "left": 290,
+      "attrs": {
+        "color": "blue",
+        "label": "Hablar"
+      }
+    }
+  ],
+  "connections": [
+    ["boton_voz:1.l", "xiao:D1", "blue", []],
+    ["boton_voz:2.l", "xiao:GND", "black", []]
+  ],
+  "dependencies": {}
+}

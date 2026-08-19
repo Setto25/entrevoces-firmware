@@ -1,0 +1,4 @@
+interface:
+  display_name: "Probar recorrido E2E EntreVoces"
+  short_description: "Verifica el flujo social completo del MVP"
+  default_prompt: "Usa $probar-e2e-entrevoces para ejecutar y documentar el recorrido del MVP."

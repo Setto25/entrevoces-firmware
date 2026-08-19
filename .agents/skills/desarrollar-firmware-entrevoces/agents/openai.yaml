@@ -1,0 +1,4 @@
+interface:
+  display_name: "Desarrollar firmware EntreVoces"
+  short_description: "Implementa firmware seguro y compatible con la API"
+  default_prompt: "Usa $desarrollar-firmware-entrevoces para implementar este cambio del dispositivo."

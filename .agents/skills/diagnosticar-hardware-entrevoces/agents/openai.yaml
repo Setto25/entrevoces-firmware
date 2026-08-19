@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diagnosticar hardware EntreVoces"
+  short_description: "Guía pruebas seguras del dispositivo físico"
+  default_prompt: "Usa $diagnosticar-hardware-entrevoces para guiar y registrar esta prueba física."

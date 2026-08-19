@@ -1,0 +1,12 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# MicroPython/Dispositivo
+*.wav
+*.bin
+
+# Antigravity/Config
+.DS_Store

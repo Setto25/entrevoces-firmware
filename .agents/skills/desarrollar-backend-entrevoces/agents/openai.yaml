@@ -1,0 +1,4 @@
+interface:
+  display_name: "Desarrollar backend EntreVoces"
+  short_description: "Implementa FastAPI con reglas y pruebas del dominio"
+  default_prompt: "Usa $desarrollar-backend-entrevoces para implementar este cambio del servidor."

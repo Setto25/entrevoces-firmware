@@ -1,0 +1,4 @@
+interface:
+  display_name: "Validar audio del dispositivo"
+  short_description: "Inspecciona WAV y prueba el contrato de audio"
+  default_prompt: "Usa $validar-audio-dispositivo para verificar este WAV y el flujo de audio."
