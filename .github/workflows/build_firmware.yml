@@ -7,50 +7,32 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    container: espressif/idf:v5.2.2
+
     steps:
-      - name: Checkout this repository
+      - name: Checkout custom code
         uses: actions/checkout@v4
         with:
           path: custom_code
 
-      - name: Checkout MicroPython v1.25.0
+      - name: Checkout MicroPython v1.23.0
         uses: actions/checkout@v4
         with:
           repository: micropython/micropython
-          ref: v1.25.0
+          ref: v1.23.0
           path: micropython
-          submodules: false
-
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git wget flex bison gperf python3 python3-pip python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
-
-      - name: Clone ESP-IDF v5.4.0
-        run: |
-          git clone -b v5.4.0 --depth 1 --shallow-submodules --recursive https://github.com/espressif/esp-idf.git esp-idf
-          cd esp-idf
-          ./install.sh esp32s3
+          submodules: recursive
 
       - name: Build mpy-cross
         run: |
-          cd micropython/mpy-cross
-          make -j$(nproc)
+          make -C micropython/mpy-cross -j$(nproc)
 
-      - name: Prepare ESP32 port submodules
+      - name: Build ESP32-S3 Firmware
         run: |
-          cd micropython
-          git submodule update --init --depth 1 lib/berkeley-db-1.xx
-          git submodule update --init --depth 1 lib/micropython-lib
-          cd ports/esp32
-          make submodules
-
-      - name: Build ESP32-S3 Firmware with PDM module
-        run: |
-          source esp-idf/export.sh
+          . /opt/esp/idf/export.sh
           cd micropython/ports/esp32
+          make submodules
           make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES=${{ github.workspace }}/custom_code/dispositivo/firmware_personalizado/modulo_pdm/micropython.cmake
 
       - name: Upload Firmware Artifact
@@ -59,6 +41,5 @@ jobs:
           name: firmware-esp32-s3-pdm
           path: |
             micropython/ports/esp32/build-ESP32_GENERIC_S3/firmware.bin
-            micropython/ports/esp32/build-ESP32_GENERIC_S3/micropython.bin
             micropython/ports/esp32/build-ESP32_GENERIC_S3/bootloader/bootloader.bin
             micropython/ports/esp32/build-ESP32_GENERIC_S3/partition_table/partition-table.bin
