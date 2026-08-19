@@ -31,9 +31,10 @@ jobs:
       - name: Build ESP32-S3 Firmware
         run: |
           . /opt/esp/idf/export.sh
+          MODULE_PATH="$(pwd)/custom_code/dispositivo/firmware_personalizado/modulo_pdm/micropython.cmake"
           cd micropython/ports/esp32
           make submodules
-          make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES=${{ github.workspace }}/custom_code/dispositivo/firmware_personalizado/modulo_pdm/micropython.cmake
+          make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH"
 
       - name: Upload Firmware Artifact
         uses: actions/upload-artifact@v4
