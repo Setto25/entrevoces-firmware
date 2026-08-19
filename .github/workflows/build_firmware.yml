@@ -34,7 +34,10 @@ jobs:
           MODULE_PATH="$(pwd)/custom_code/dispositivo/firmware_personalizado/modulo_pdm/micropython.cmake"
           cd micropython/ports/esp32
           make submodules
-          make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH" CFLAGS_EXTRA="-DCFG_TUD_CDC_EP_BUFSIZE=512"
+          idf.py -B build-ESP32_GENERIC_S3 -D MICROPY_BOARD=ESP32_GENERIC_S3 reconfigure || true
+          find . -name "usb_descriptors.c" -exec sed -i '1i#define CFG_TUD_CDC_EP_BUFSIZE 512' {} + || true
+          find . -name "usb_descriptors.h" -exec sed -i '1i#define CFG_TUD_CDC_EP_BUFSIZE 512' {} + || true
+          make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH"
 
       - name: Upload Firmware Artifact
         uses: actions/upload-artifact@v4
