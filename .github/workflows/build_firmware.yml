@@ -32,7 +32,9 @@ jobs:
 
       - name: Prepare ESP32 submodules
         run: |
-          cd micropython/ports/esp32
+          cd micropython
+          git submodule update --init lib/berkeley-db-1.xx lib/tinyusb
+          cd ports/esp32
           make submodules
 
       - name: Build ESP32-S3 Firmware (two-pass for TinyUSB fix)
