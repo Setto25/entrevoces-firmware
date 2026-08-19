@@ -22,21 +22,33 @@ jobs:
           repository: micropython/micropython
           ref: v1.23.0
           path: micropython
-          submodules: recursive
+          submodules: false
 
       - name: Build mpy-cross
         run: |
-          make -C micropython/mpy-cross -j$(nproc)
+          cd micropython
+          git submodule update --init lib/micropython-lib
+          make -C mpy-cross -j$(nproc)
 
-      - name: Build ESP32-S3 Firmware
+      - name: Prepare ESP32 submodules
+        run: |
+          cd micropython/ports/esp32
+          make submodules
+
+      - name: Build ESP32-S3 Firmware (two-pass for TinyUSB fix)
         run: |
           . /opt/esp/idf/export.sh
           MODULE_PATH="$(pwd)/custom_code/dispositivo/firmware_personalizado/modulo_pdm/micropython.cmake"
           cd micropython/ports/esp32
-          make submodules
-          idf.py -B build-ESP32_GENERIC_S3 -D MICROPY_BOARD=ESP32_GENERIC_S3 reconfigure || true
-          find . -name "usb_descriptors.c" -exec sed -i '1i#define CFG_TUD_CDC_EP_BUFSIZE 512' {} + || true
-          find . -name "usb_descriptors.h" -exec sed -i '1i#define CFG_TUD_CDC_EP_BUFSIZE 512' {} + || true
+
+          # Primera pasada: descarga managed_components y falla en TinyUSB
+          make BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH" || true
+
+          # Parchar el archivo problemático ahora que ya fue descargado
+          sed -i '1i #ifndef CFG_TUD_CDC_EP_BUFSIZE\n#define CFG_TUD_CDC_EP_BUFSIZE 512\n#endif' \
+            managed_components/espressif__esp_tinyusb/usb_descriptors.c
+
+          # Segunda pasada: compila correctamente con el parche
           make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH"
 
       - name: Upload Firmware Artifact
