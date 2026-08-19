@@ -48,6 +48,9 @@ jobs:
           sed -i '1i #ifndef CFG_TUD_CDC_EP_BUFSIZE\n#define CFG_TUD_CDC_EP_BUFSIZE 512\n#endif' \
             managed_components/espressif__esp_tinyusb/usb_descriptors.c
 
+          # Eliminar el hash para que ESP-IDF acepte la modificación
+          rm -f managed_components/espressif__esp_tinyusb/.component_hash
+
           # Segunda pasada: compila correctamente con el parche
           make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH"
 
