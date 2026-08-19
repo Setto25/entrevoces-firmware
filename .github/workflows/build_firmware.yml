@@ -44,7 +44,7 @@ jobs:
           cd micropython/ports/esp32
 
           # Primera pasada: descarga managed_components y falla en TinyUSB
-          make BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH" || true
+          make BOARD=ESP32_GENERIC_S3 BOARD_VARIANT=SPIRAM_OCT USER_C_MODULES="$MODULE_PATH" || true
 
           # Parchar el archivo problemático ahora que ya fue descargado
           sed -i '1i #ifndef CFG_TUD_CDC_EP_BUFSIZE\n#define CFG_TUD_CDC_EP_BUFSIZE 512\n#endif' \
@@ -54,13 +54,13 @@ jobs:
           rm -f managed_components/espressif__esp_tinyusb/.component_hash
 
           # Segunda pasada: compila correctamente con el parche
-          make -j$(nproc) BOARD=ESP32_GENERIC_S3 USER_C_MODULES="$MODULE_PATH"
+          make -j$(nproc) BOARD=ESP32_GENERIC_S3 BOARD_VARIANT=SPIRAM_OCT USER_C_MODULES="$MODULE_PATH"
 
       - name: Upload Firmware Artifact
         uses: actions/upload-artifact@v4
         with:
           name: firmware-esp32-s3-pdm
           path: |
-            micropython/ports/esp32/build-ESP32_GENERIC_S3/firmware.bin
-            micropython/ports/esp32/build-ESP32_GENERIC_S3/bootloader/bootloader.bin
-            micropython/ports/esp32/build-ESP32_GENERIC_S3/partition_table/partition-table.bin
+            micropython/ports/esp32/build-ESP32_GENERIC_S3-SPIRAM_OCT/firmware.bin
+            micropython/ports/esp32/build-ESP32_GENERIC_S3-SPIRAM_OCT/bootloader/bootloader.bin
+            micropython/ports/esp32/build-ESP32_GENERIC_S3-SPIRAM_OCT/partition_table/partition-table.bin
