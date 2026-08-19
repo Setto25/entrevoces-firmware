@@ -46,8 +46,8 @@ jobs:
           # Primera pasada: descarga managed_components y falla en TinyUSB
           make BOARD=ESP32_GENERIC_S3 BOARD_VARIANT=SPIRAM_OCT USER_C_MODULES="$MODULE_PATH" || true
 
-          # Parchar el archivo problemático ahora que ya fue descargado
-          sed -i '1i #ifndef CFG_TUD_CDC_EP_BUFSIZE\n#define CFG_TUD_CDC_EP_BUFSIZE 512\n#endif' \
+          # Parchar el archivo problemático con el buffer correcto de USB Full-Speed (64 bytes)
+          sed -i '1i #ifndef CFG_TUD_CDC_EP_BUFSIZE\n#define CFG_TUD_CDC_EP_BUFSIZE 64\n#endif' \
             managed_components/espressif__esp_tinyusb/usb_descriptors.c
 
           # Eliminar el hash para que ESP-IDF acepte la modificación
